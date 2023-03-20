@@ -1,0 +1,23 @@
+{
+  "commands": [
+    "#!/bin/bash",
+    "echo \"U-04. Check Password Max Days\"",
+    "cat /etc/login.defs | grep PASS_MAX_DAYS",
+    "echo \"U-06 (High): Check Home Env Path setting\"",
+    "echo $PATH",
+    "echo \"U-08 (High): Check /etc/passwd file owner and permission\"",
+    "ls -l /etc/passwd",
+    "echo \"U-09 (High): Check /etc/shadow file owner and permission\"",
+    "ls -l /etc/passwd",
+    "echo \"U-10 (High): Check /etc/hosts file owner and permission\"",
+    "ls -l /etc/hosts",
+    "echo \"U-15 (High): Check User, system init and env owner and permission\"",
+    "cat /etc/passwd | grep /home"
+  ],
+  "workingDirectory": [
+    ""
+  ],
+  "executionTimeout": [
+    "3600"
+  ]
+}
