@@ -16,7 +16,7 @@ This Demo is based on `ap-northeast-2` (Seoul region).
 > CCE(Common Configuration Enumeration): Vulnerabilities in system settings that allow operations beyond the user's
 > permitted privileges or enable information viewing, falsification, or leakage beyond the scope.
 >
-> CVE(Common Vulnerabilty and Exposures): publicly know information security vulerabilities and exposures.
+> CVE(Common Vulnerability and Exposures): publicly know information security vulnerabilities and exposures.
 
 
 
@@ -30,9 +30,8 @@ This Demo is based on `ap-northeast-2` (Seoul region).
 
 - Amazon EC2
 - AWS Resource Groups & Tag Editor
-- AWS Resource Explorer
 
-**Inspect and track EC2 vulnerabilty**
+**Inspect and track EC2 vulnerability**
 
 - AWS Systems Manager
 - Amazon Inspector
@@ -54,13 +53,17 @@ This Demo is based on `ap-northeast-2` (Seoul region).
 
 ### 1. Setup CDK
 
+Check Your Account Role or User
+
+```bash
+aws sts get-caller-identity
+```
+
 ```bash
 git clone https://github.com/aws-samples/inventory-management-for-amazon-ec2.git
 cd images-for-amazon-ec2
 cdk bootstrap
 ```
-
-
 
 ### 2. DemoVPCStack
 
@@ -82,7 +85,11 @@ cdk deploy DemoVPCStack
 cdk deploy InventoryManagementStack --parameters TargetEmail=YOUR_EMAIL@DOMAIN.COM
 ```
 
-#### 2-b. Enable Inspector
+#### 3-b. Verify Email for Amazon SNS
+
+![ses-email-verification](static/images/guide/ses-email-verification.png)
+
+#### 3-c. Enable Inspector
 
 ```bash
 aws inspector2 enable --resource-types EC2
@@ -98,31 +105,47 @@ cdk deploy SecurityReportStack --parameters TargetEmail=YOUR_EMAIL@DOMAIN.COM
 
 ![FullInventoryManagement](static/images/architecture/full-inventory-management.png)
 
+#### 4-b. Confirm Subscribe for SNS Notification
+
+![sns-subscription](static/images/guide/sns-subscription.png)
+
 ## Hands On Lab: Inventory Management
 
 ### 1. Manage Inventory
 
-1. After deploy DemoVPCStack, `ssm-session-key` KSM Key is created.
-2. `Enable KMS encryption` by KMS key (alias: ssm-session-key)
-3. Monitor EC2 Instance OS Level metric and system
+#### 1-a. Explore Resource with tags
 
-#### 1-a. Systems Manager > Session Manager > Preferences
+In the tag editor, You can search your aws resources by tags and export csv. \
+
+Go to [AWS Tag Editor](https://ap-northeast-2.console.aws.amazon.com/resource-groups/tag-editor/find-resources)
+
+![img.png](static/images/demo/tag-editor.png)
+
+#### 1-b. Systems Manager > Session Manager > Preferences
 
 To collect more detailed system level metrics(system performance, CPU, Memory, access session), KSM encryption is
 required for session manager.
+
+1. After deploy DemoVPCStack, `ssm-session-key` KSM Key is created.
+2. `Enable KMS encryption` by KMS key (alias: ssm-session-key)
+3. Monitor EC2 Instance OS Level metric and system
 
 Go
 to [Session Manager Preferences](https://ap-northeast-2.console.aws.amazon.com/systems-manager/session-manager/preferences)
 
 ![ssm-enable-kms-for-session](static/images/guide/ssm-enable-kms-for-session.png)
 
-#### 1-b. Systems Manager > Inventory Manager > Setup Inventory
+#### 1-c. Systems Manager > Inventory Manager > Setup Inventory
 
 Go to [Systems Manager Inventory](https://ap-northeast-2.console.aws.amazon.com/systems-manager/inventory)
 
 ![inventory-association](static/images/guide/inventory-association.png)
 
-#### 1-c. Systems Manager > Fleet Manager
+After associating your managed instances with systems manager, the inventory data can be collected by ssm agent.
+
+![ssm-inventory-dashboard](static/images/demo/ssm-inventory-dashboard.png)
+
+#### 1-d. Systems Manager > Fleet Manager
 
 Go to [Systems Manager Fleet Manager](https://ap-northeast-2.console.aws.amazon.com/systems-manager/managed-instances)
 
@@ -136,18 +159,16 @@ Go to [Systems Manager Fleet Manager](https://ap-northeast-2.console.aws.amazon.
 
 ### 2. Check CCE for EC2 Instances
 
-#### 2-a. Confirm Subscribe for SNS Notification
-
-![sns-subscription](static/images/guide/sns-subscription.png)
-
-#### 2-b. Create Resource Groups
+#### 2-a. Create Resource Groups
 
 1. Go to [Resource Groups Console](https://ap-northeast-2.console.aws.amazon.com/resource-groups/groups/new)
-    1. Select Resource Type: `AWS::EC2::instance`
-    2. Select Tags: `Env: Dev`, `InventoryCategory: WAS`
-    3. Group Name: `DEVWasInstance`
+   1. Select Resource Type: `AWS::EC2::instance`
+   2. Select Tags: `Env: Dev`, `InventoryCategory: WAS`
+   3. Group Name: `DEVWasInstance`
 
-#### 2-c. Run CCE Check commands via Systems Manager without SSH
+![resource-group](static/images/demo/resource-group.png)
+
+#### 2-b. Run CCE Check commands via Systems Manager without SSH
 
 ```bash
 bash scripts/check_cce_param_by_resource_group.sh DevWASInstances
@@ -218,9 +239,7 @@ Go to [Security Hub Console](https://ap-northeast-2.console.aws.amazon.com/secur
 
 ![securityhub-console](static/images/demo/securityhub-console.png)
 
-#### 3-b. Setup Email Report Notification
 
-![ses-email-verification](static/images/guide/ses-email-verification.png)
 
 #### 3-c. Daily Security Report
 
