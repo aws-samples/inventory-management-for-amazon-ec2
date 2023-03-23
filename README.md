@@ -46,7 +46,7 @@ This Demo is based on `ap-northeast-2` (Seoul region).
 
 ### 0. Requirements
 
-- AWS Account - [Craete AWS Account](https://aws.amazon.com/ko/resources/create-account/)
+- AWS Account - [Create AWS Account](https://aws.amazon.com/ko/resources/create-account/)
 - AWS CDK (python) - [CDK Install Guide](https://docs.aws.amazon.com/cdk/v2/guide/work-with-cdk-python.html)
 - AWS CLI - [AWS CLI Install Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - Email for Notification
@@ -253,6 +253,32 @@ bash scripts/send_today_report.sh
 ```
 
 ![daily-security-report](static/images/demo/daily-security-report.png)
+
+## Clean Up Resources
+
+### Clean Up DemoVPC Stack
+
+```bash
+cdk destroy DemoVPCStack
+```
+
+### Clean Up InventoryManagementStack
+
+````bash
+cdk destroy InventoryManagementStack
+````
+
+### Disable Amazon Inspector2
+
+```bash
+aws inspector2 disable --resource-type EC2
+```
+
+### Clean Up Email Notification Stack
+
+```bash
+cdk destroy DailyEmailReportStack
+```
 
 ## Security
 
