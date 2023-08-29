@@ -95,12 +95,12 @@ cdk deploy InventoryManagementStack --parameters TargetEmail=YOUR_EMAIL@DOMAIN.C
 aws inspector2 enable --resource-types EC2
 ```
 
-### 4. SecurityReportStack
+### 4. DailyEmailReportStack
 
-#### 4-a. Deploy SecurityReportStack
+#### 4-a. Deploy DailyEmailReportStack
 
 ```bash
-cdk deploy SecurityReportStack --parameters TargetEmail=YOUR_EMAIL@DOMAIN.COM
+cdk deploy DailyEmailReportStack --parameters TargetEmail=YOUR_EMAIL@DOMAIN.COM
 ```
 
 ![FullInventoryManagement](static/images/architecture/full-inventory-management.png)
